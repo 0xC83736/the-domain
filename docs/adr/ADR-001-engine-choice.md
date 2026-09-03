@@ -1,4 +1,4 @@
-# ADR-001: Engine — Unreal Engine 5.4
+# ADR-001: Engine — Unreal Engine 5.8
 
 **Status:** Accepted  
 **Date:** 2026-09-03  
@@ -8,7 +8,7 @@
 Project NEXUS requires photorealistic rendering at Cyberpunk-adjacent fidelity levels on an RTX 2060 minimum spec. The previous plan targeted Godot 4 with a GTX 960 floor; the enhanced fidelity tier revision raised both the visual target and the hardware floor.
 
 ## Decision
-Use **Unreal Engine 5.4** as the primary engine.
+Use **Unreal Engine 5.8** as the primary engine.
 
 ## Rationale
 - **Lumen** provides dynamic global illumination without pre-baked lightmaps — essential for a destructible, player-modifiable world
