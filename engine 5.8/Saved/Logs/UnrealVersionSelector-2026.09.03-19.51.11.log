@@ -1,0 +1,79 @@
+Log started at 09/03/2026 19:51:11 (2026-09-03T18:51:11Z)
+Resolved project argument E:/Projects/the-domain/engine 5.8/TheDomain.uproject to E:\Projects\the-domain\engine 5.8\TheDomain.uproject
+No config file at C:\ProgramData\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\0xc83637\AppData\Local\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\0xc83637\Documents\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Configuration will be read from:
+  C:\Users\0xc83637\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (E:\Projects\the-domain\engine 5.8\Intermediate\Build\XmlConfigCache.bin): C:\Users\0xc83637\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (E:\Projects\the-domain\engine 5.8\Intermediate\Build\XmlConfigCache.bin): E:\Projects\the-domain\engine 5.8\Saved\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (E:\Projects\the-domain\engine 5.8\Intermediate\Build\XmlConfigCache.bin): C:\Users\0xc83637\AppData\Local\UnrealEngine\Intermediate\Build\UnrealBuildTool.Env.BuildConfiguration.xml
+Log file: E:\Projects\the-domain\engine 5.8\Saved\Logs\UnrealVersionSelector-2026.09.03-19.51.11.log
+
+Setting temp directory to 'C:\Users\0xc83637\AppData\Local\Temp\UnrealBuildTool\eb6d2d82'
+    Registering build platform: UnrealBuildTool.AndroidPlatformFactory
+    Registering build platform: UnrealBuildTool.IOSPlatformFactory
+    Registering build platform: UnrealBuildTool.LinuxPlatformFactory
+    Registering build platform: UnrealBuildTool.MacPlatformFactory
+    Registering build platform: UnrealBuildTool.TVOSPlatformFactory
+    Registering build platform: UnrealBuildTool.WindowsPlatformFactory
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (1)
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (2)
+Found Windows 10 SDK version 10.0.22621.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.22621.0 at C:\Program Files (x86)\Windows Kits\10
+Found Windows 10 SDK version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Win64 Installed SDK(s): MinVersion_Sdk=10.0.19041.0, MaxVersion_Sdk=10.9.99999.0, CurrentVersion_Sdk=10.0.22621.0, Version_AutoSdk=10.0.22621.0, CurrentVersion_AutoSdk=
+        Registering build platform: Win64 - buildable: True
+    Registering build platform: UnrealBuildTool.VisionOSPlatformFactory
+Resolved project argument E:/Projects/the-domain/engine 5.8/TheDomain.uproject to E:\Projects\the-domain\engine 5.8\TheDomain.uproject
+Reading configuration file from cache (E:\Projects\the-domain\engine 5.8\Intermediate\Build\XmlConfigCache.bin): C:\Users\0xc83637\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (E:\Projects\the-domain\engine 5.8\Intermediate\Build\XmlConfigCache.bin): E:\Projects\the-domain\engine 5.8\Saved\UnrealBuildTool\BuildConfiguration.xml
+Reading configuration file from cache (E:\Projects\the-domain\engine 5.8\Intermediate\Build\XmlConfigCache.bin): C:\Users\0xc83637\AppData\Local\UnrealEngine\Intermediate\Build\UnrealBuildTool.Env.BuildConfiguration.xml
+Registering project generator UnrealBuildTool.AndroidProjectGenerator for Android
+Skipping project file generator registration for Android due to no valid BuildPlatform.
+Registering project generator UnrealBuildTool.IOSProjectGenerator for IOS
+Skipping project file generator registration for IOS due to no valid BuildPlatform.
+Registering project generator UnrealBuildTool.LinuxProjectGenerator for Linux
+Skipping project file generator registration for Linux due to no valid BuildPlatform.
+Registering project generator UnrealBuildTool.LinuxProjectGenerator for LinuxArm64
+Skipping project file generator registration for LinuxArm64 due to no valid BuildPlatform.
+Registering project generator UnrealBuildTool.MacProjectGenerator for Mac
+Skipping project file generator registration for Mac due to no valid BuildPlatform.
+Registering project generator UnrealBuildTool.TVOSProjectGenerator for TVOS
+Skipping project file generator registration for TVOS due to no valid BuildPlatform.
+Registering project generator UnrealBuildTool.WindowsProjectGenerator for Win64
+Registering project generator UnrealBuildTool.VisionOSProjectGenerator for VisionOS
+Skipping project file generator registration for VisionOS due to no valid BuildPlatform.
+
+---   SDK INFO START   ---
+---   SDK INFO END   ---
+
+TheDomain.uproject(0): error: JsonReaderException: '0xFF' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0.
+   at System.Text.Json.ThrowHelper.ThrowJsonReaderException(Utf8JsonReader& json, ExceptionResource resource, Byte nextByte, ReadOnlySpan`1 bytes)
+   at System.Text.Json.Utf8JsonReader.ConsumeValue(Byte marker)
+   at System.Text.Json.Utf8JsonReader.ReadFirstToken(Byte first)
+   at System.Text.Json.Utf8JsonReader.ReadSingleSegment()
+   at System.Text.Json.Utf8JsonReader.Read()
+   at System.Text.Json.JsonDocument.Parse(ReadOnlySpan`1 utf8JsonSpan, JsonReaderOptions readerOptions, MetadataDb& database, StackRowStack& stack)
+   at System.Text.Json.JsonDocument.Parse(ReadOnlyMemory`1 utf8Json, JsonReaderOptions readerOptions, Byte[] extraRentedArrayPoolBytes, PooledByteBufferWriter extraPooledByteBufferWriter, Boolean allowDuplicateProperties)
+   at System.Text.Json.JsonDocument.Parse(ReadOnlyMemory`1 utf8Json, JsonDocumentOptions options)
+   at EpicGames.Core.JsonObject.ParseUtf8File(String path)
+   at EpicGames.Core.JsonObject.Read(FileReference file)
+   at UnrealBuildTool.ProjectDescriptor.FromFile(FileReference FileName)Wrapped by JsonException: '0xFF' is an invalid start of a value. LineNumber: 0 | BytePositionInLine: 0. (in E:\Projects\the-domain\engine 5.8\TheDomain.uproject)
+   at UnrealBuildTool.ProjectDescriptor.FromFile(FileReference FileName)
+   at UnrealBuildTool.ProjectFileGenerator..ctor(FileReference InOnlyGameProject, CSharpProjectCache InCSharpProjCache)
+   at UnrealBuildTool.GenerateProjectFilesMode.ExecuteAsync(CommandLineArguments Arguments, ILogger Logger)
+   at UnrealBuildTool.UnrealBuildTool.Main(String[] ArgumentsArray)
+WriteFileIfChanged() wrote 0 changed files of 2 requested writes.
+
+Timeline:
+[  0.000]  +0.270 Main
+   0.032          [  0.032]  +0.057 Apply XmlConfig
+   0.096          [  0.096]  +0.044 AddTelemetry
+   0.160          [  0.160]  +0.109 RegisterPlatforms
+[  0.355]  +0.003 TelemetryService.FlushEvents
+[  0.359]
+
+Result: Failed (OtherCompilationError)
+Total execution time: 0.36 seconds
