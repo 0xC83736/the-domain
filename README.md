@@ -2,7 +2,7 @@
 
 **An Oasis-scale open world sandbox — Phase 1: Core engine foundation**
 
-> Enhanced fidelity tier · UE5 5.4 · RTX 2060 min spec · Rust hot paths via FFI
+> Enhanced fidelity tier · UE5 5.8 · RTX 2060 min spec · Rust hot paths via FFI
 
 ---
 
@@ -39,7 +39,7 @@ the-domain/
 |-------------------|-----------|--------------------------------|
 | Rust              | stable    | Core crate compilation         |
 | cargo             | latest    | Workspace build + bench        |
-| Unreal Engine     | 5.4       | Game engine (install separately)|
+| Unreal Engine     | 5.8       | Game engine (install separately)|
 | Python            | 3.12+     | CI tooling                     |
 | critcmp           | latest    | Benchmark regression comparison |
 
@@ -62,7 +62,7 @@ python tools/asset_validation/validate.py \
     --assert-texture-compression \
     --asset-root engine/Content
 
-# 5. Open UE5 project (requires UE5 5.4 installed)
+# 5. Open UE5 project (requires UE5 5.8 installed)
 # engine/TheDomain.uproject → right-click → Generate project files → open .sln
 ```
 
