@@ -35,3 +35,10 @@ renders/*.png
 *.so
 *.dll
 *.dylib
+
+# UE generated — never commit
+"engine 5.8"/Intermediate/
+"engine 5.8"/Saved/
+"engine 5.8"/*.sln
+"engine 5.8"/Binaries/
+"engine 5.8"/DerivedDataCache/
