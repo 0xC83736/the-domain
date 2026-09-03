@@ -1,0 +1,22 @@
+[package]
+name        = "nexus_ecs"
+description = "Archetype-based ECS world — the central data model for The Domain"
+version.workspace    = true
+edition.workspace    = true
+authors.workspace    = true
+license.workspace    = true
+repository.workspace = true
+
+[dependencies]
+glam.workspace      = true
+parking_lot.workspace = true
+tracing.workspace   = true
+thiserror.workspace = true
+bytemuck.workspace  = true
+
+[dev-dependencies]
+criterion.workspace = true
+
+[[bench]]
+name    = "ecs_bench"
+harness = false

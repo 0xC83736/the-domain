@@ -1,0 +1,25 @@
+{
+    "FileVersion": 3,
+    "EngineAssociation": "5.4",
+    "Category": "",
+    "Description": "The Domain — Oasis-scale open world sandbox",
+    "Modules": [
+        {
+            "Name": "TheDomain",
+            "Type": "Runtime",
+            "LoadingPhase": "Default",
+            "AdditionalDependencies": [
+                "Engine",
+                "NexusCore"
+            ]
+        }
+    ],
+    "Plugins": [
+        { "Name": "NexusCore",     "Enabled": true },
+        { "Name": "Nanite",        "Enabled": true },
+        { "Name": "Lumen",         "Enabled": true },
+        { "Name": "DLSS",          "Enabled": true },
+        { "Name": "FSR3",          "Enabled": true },
+        { "Name": "WorldPartition", "Enabled": true }
+    ]
+}

@@ -1,0 +1,105 @@
+name: The Domain CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # ─── Rust workspace ───────────────────────────────────────────────────────
+  rust-check:
+    name: Rust — format, clippy, test
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Format check
+        run: cargo fmt --all -- --check
+
+      - name: Clippy (deny warnings)
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+      - name: Unit tests
+        run: cargo test --workspace --release
+
+  # ─── Benchmarks with regression gate ──────────────────────────────────────
+  rust-bench:
+    name: Rust — benchmark regression gate
+    runs-on: ubuntu-22.04
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install critcmp
+        run: cargo install critcmp --locked
+
+      - name: Bench baseline (target branch)
+        run: |
+          git checkout ${{ github.base_ref }}
+          cargo bench --workspace -- --save-baseline base
+
+      - name: Bench PR
+        run: |
+          git checkout ${{ github.head_ref }}
+          cargo bench --workspace -- --save-baseline pr
+
+      - name: Compare — fail if >10% regression
+        run: critcmp base pr --threshold 10
+
+  # ─── Asset validation ──────────────────────────────────────────────────────
+  asset-validation:
+    name: Asset validation — Nanite + texture compression
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install deps
+        run: pip install -r tools/asset_validation/requirements.txt
+      - name: Validate assets
+        run: |
+          python tools/asset_validation/validate.py \
+            --assert-nanite \
+            --assert-texture-compression \
+            --asset-root engine/Content
+
+  # ─── Min-spec benchmark ────────────────────────────────────────────────────
+  min-spec-benchmark:
+    name: Performance gate — RTX 2060 profile
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Cargo build release
+        run: cargo build --workspace --release
+      - name: ECS spawn benchmark assertion
+        run: python tools/benchmark/assert_ecs.py --max-spawn-1m-ms 50 --max-query-100k-ms 2
+
+  # ─── DLSS quality gate ─────────────────────────────────────────────────────
+  dlss-quality:
+    name: DLSS SSIM quality gate
+    runs-on: ubuntu-22.04
+    # Runs on UE5-available runner (self-hosted in production)
+    # Skipped in open CI — placeholder to document the gate
+    if: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: DLSS SSIM check
+        run: |
+          python tools/ci/dlss_ssim_check.py \
+            --reference renders/native_1080p_ref.png \
+            --candidate renders/dlss_quality_1080p.png \
+            --threshold 0.92

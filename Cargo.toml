@@ -1,0 +1,48 @@
+[workspace]
+resolver = "2"
+members = [
+    "core/nexus_ecs",
+    "core/nexus_world",
+    "core/nexus_physics",
+    "core/nexus_net",
+    "core/nexus_worldgen",
+    "core/nexus_assets",
+]
+
+[workspace.package]
+version     = "0.1.0"
+edition     = "2021"
+authors     = ["The Domain Team"]
+license     = "UNLICENSED"
+repository  = "https://github.com/the-domain/the-domain"
+
+[workspace.dependencies]
+# Async runtime
+tokio        = { version = "1", features = ["full"] }
+# Serialisation
+bincode      = "2"
+serde        = { version = "1", features = ["derive"] }
+# Math
+glam         = { version = "0.27", features = ["bytemuck"] }
+bytemuck     = { version = "1", features = ["derive"] }
+# Concurrency
+parking_lot  = "0.12"
+rayon        = "1"
+# Logging / tracing
+tracing      = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+# Error handling
+anyhow       = "1"
+thiserror    = "1"
+# Benchmarking
+criterion    = { version = "0.5", features = ["html_reports"] }
+
+[profile.release]
+opt-level   = 3
+lto         = "thin"
+codegen-units = 1
+strip       = "symbols"
+
+[profile.bench]
+inherits    = "release"
+debug       = true

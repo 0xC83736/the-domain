@@ -1,0 +1,37 @@
+# Rust
+/target/
+core/*/target/
+**/*.rs.bk
+Cargo.lock
+
+# UE5
+engine/Binaries/
+engine/Build/
+engine/DerivedDataCache/
+engine/Intermediate/
+engine/Saved/
+engine/.vs/
+engine/*.sln
+engine/*.xcworkspace
+engine/*.xcodeproj
+plugins/*/Binaries/
+plugins/*/Intermediate/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+
+# Benchmarks / renders (large binary — store in LFS if needed)
+criterion/
+renders/*.png
+
+# Build artifacts
+*.a
+*.so
+*.dll
+*.dylib

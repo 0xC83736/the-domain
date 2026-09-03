@@ -1,0 +1,21 @@
+[package]
+name        = "nexus_physics"
+description = "The Domain — nexus_physics subsystem (Phase 1 stub)"
+version.workspace    = true
+edition.workspace    = true
+authors.workspace    = true
+license.workspace    = true
+repository.workspace = true
+
+[dependencies]
+nexus_ecs    = { path = "../nexus_ecs" }
+glam.workspace       = true
+parking_lot.workspace = true
+tokio.workspace      = true
+tracing.workspace    = true
+thiserror.workspace  = true
+anyhow.workspace     = true
+
+[dev-dependencies]
+criterion.workspace  = true
+tokio = { version = "1", features = ["full", "test-util"] }

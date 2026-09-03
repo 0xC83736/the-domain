@@ -1,0 +1,24 @@
+{
+    "FileVersion": 3,
+    "Version": 1,
+    "VersionName": "0.1.0",
+    "FriendlyName": "NexusCore",
+    "Description": "Rust ECS and world subsystem bridge for The Domain",
+    "Category": "TheDomain",
+    "CreatedBy": "The Domain Team",
+    "CreatedByURL": "https://github.com/the-domain/the-domain",
+    "DocsURL": "",
+    "MarketplaceURL": "",
+    "SupportURL": "",
+    "CanContainContent": false,
+    "IsBetaVersion": false,
+    "IsExperimentalVersion": false,
+    "Installed": false,
+    "Modules": [
+        {
+            "Name": "NexusCore",
+            "Type": "Runtime",
+            "LoadingPhase": "Default"
+        }
+    ]
+}
