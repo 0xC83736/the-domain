@@ -101,15 +101,20 @@ public class NexusCore : ModuleRules
             }
         }
 
-        // On Windows, the MSVC Rust runtime needs these system libs.
+        // On Windows, Rust's std links against Win32/NT APIs that UBT does
+        // not include automatically. These are required by the Rust runtime
+        // embedded in the staticlib regardless of what nexus_ecs itself uses.
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
             PublicSystemLibraries.AddRange(new string[]
             {
-                "Bcrypt.lib",   // Rust crypto primitives
-                "Ntdll.lib",    // Rust std thread/process APIs
-                "Userenv.lib",  // Rust std env APIs
-                "Ws2_32.lib",   // Rust std net APIs
+                "ntdll.lib",      // NtReadFile, NtWriteFile, NtCreateFile, NtOpenFile,
+                                  // NtCreateNamedPipeFile, RtlNtStatusToDosError
+                "userenv.lib",    // GetUserProfileDirectoryW
+                "bcrypt.lib",     // Rust crypto / random
+                "ws2_32.lib",     // Rust std net
+                "advapi32.lib",   // Rust std process / registry
+                "kernel32.lib",   // General Win32 (usually already linked but be explicit)
             });
         }
     }
