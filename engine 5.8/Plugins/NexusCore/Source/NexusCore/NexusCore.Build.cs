@@ -28,22 +28,25 @@ public class NexusCore : ModuleRules
         //   cargo build --workspace --release
         //
         // Directory layout:
-        //   <repo_root>/
-        //     Cargo.toml                        <- workspace root
-        //     target/release/nexus_ecs.lib      <- Win64 MSVC output
-        //     target/release/libnexus_ecs.a     <- Win64 GNU / Mac / Linux
+        //   <repo_root>/                           <- C:\UEProjects\the-domain\
+        //     target/release/nexus_ecs.lib
         //     engine 5.8/
         //       Plugins/
         //         NexusCore/
         //           Source/
         //             NexusCore/
-        //               NexusCore.Build.cs      <- THIS FILE (6 levels up = repo root)
+        //               NexusCore.Build.cs   <- THIS FILE
         //
-        // ModuleDirectory = <repo_root>/engine 5.8/Plugins/NexusCore/Source/NexusCore
-        // Walk up 6 levels to reach repo root.
+        // ModuleDirectory = engine 5.8\Plugins\NexusCore\Source\NexusCore
+        // Levels to repo root: NexusCore(1) Source(2) NexusCore(3) Plugins(4) engine 5.8(5) repo(6) = 6
+        // BUT Path.Combine("..",x6) from ModuleDirectory walks:
+        //   NexusCore → Source → NexusCore → Plugins → engine 5.8 → the-domain → UEProjects
+        // That is 7 steps because ModuleDirectory itself is the starting folder.
+        // Confirmed by manual test: 6× ".." from NexusCore lands at C:\UEProjects (one too high).
+        // Correct depth is 5× ".." to land at repo root (the-domain\).
 
         string RepoRoot = Path.GetFullPath(
-            Path.Combine(ModuleDirectory, "..", "..", "..", "..", "..", ".."));
+            Path.Combine(ModuleDirectory, "..", "..", "..", "..", ".."));
 
         string RustRelease = Path.Combine(RepoRoot, "target", "release");
 
