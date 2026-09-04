@@ -18,10 +18,6 @@
 		{
 			"Name": "EnhancedInput",
 			"Enabled": true
-		},
-		{
-			"Name": "WorldPartitionEditor",
-			"Enabled": true
 		}
 	]
 }
