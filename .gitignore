@@ -5,15 +5,17 @@ core/*/target/
 Cargo.lock
 
 # UE5
-engine/Binaries/
-engine/Build/
-engine/DerivedDataCache/
-engine/Intermediate/
-engine/Saved/
-engine/.vs/
-engine/*.sln
-engine/*.xcworkspace
-engine/*.xcodeproj
+TheDomain/Binaries/
+TheDomain/Build/
+TheDomain/DerivedDataCache/
+TheDomain/Intermediate/
+TheDomain/Saved/
+TheDomain/.vs/
+TheDomain/*.sln
+TheDomain/*.xcworkspace
+TheDomain/*.xcodeproj
+TheDomain/Plugins/*/Binaries/
+TheDomain/Plugins/*/Intermediate/
 plugins/*/Binaries/
 plugins/*/Intermediate/
 
@@ -36,9 +38,3 @@ renders/*.png
 *.dll
 *.dylib
 
-# UE generated — never commit
-"engine 5.8"/Intermediate/
-"engine 5.8"/Saved/
-"engine 5.8"/*.sln
-"engine 5.8"/Binaries/
-"engine 5.8"/DerivedDataCache/

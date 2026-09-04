@@ -73,7 +73,7 @@ jobs:
           python tools/asset_validation/validate.py \
             --assert-nanite \
             --assert-texture-compression \
-            --asset-root engine/Content
+            --asset-root TheDomain/Content
 
   # ─── Min-spec benchmark ────────────────────────────────────────────────────
   min-spec-benchmark:

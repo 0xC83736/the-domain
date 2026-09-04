@@ -28,7 +28,7 @@ public class NexusCore : ModuleRules
         // Plugin opens and generates project files without them (graceful skip).
 
         // Repo root is 5 levels up from this file:
-        // engine 5.8/Plugins/NexusCore/Source/NexusCore/
+        // TheDomain/Plugins/NexusCore/Source/NexusCore/
         string RepoRoot = Path.GetFullPath(
             Path.Combine(ModuleDirectory, "..", "..", "..", "..", ".."));
 

@@ -19,7 +19,7 @@ the-domain/
 │   └── nexus_assets/       Async asset streaming manager
 ├── plugins/
 │   └── NexusCore/          UE5 plugin — Rust FFI bridge
-├── engine/                 UE5 project (TheDomain.uproject)
+├── TheDomain/              UE5 project (TheDomain.uproject)
 │   ├── Config/             Scalability tiers, engine config
 │   ├── Content/            Game assets (Nanite meshes, textures)
 │   └── Source/TheDomain/   Game C++ module
@@ -60,10 +60,10 @@ cargo bench --bench ecs_bench
 python tools/asset_validation/validate.py \
     --assert-nanite \
     --assert-texture-compression \
-    --asset-root engine/Content
+    --asset-root TheDomain/Content
 
 # 5. Open UE5 project (requires UE5 5.8 installed)
-# engine/TheDomain.uproject → right-click → Generate project files → open .sln
+# TheDomain/TheDomain.uproject → right-click → Generate project files → open .sln
 ```
 
 ## Architecture decisions
