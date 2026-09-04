@@ -24,61 +24,90 @@ public class NexusCore : ModuleRules
         });
 
         // ── Rust FFI static libraries ──────────────────────────────────────
-        // Built by: cargo build --workspace --release  (run from repo root)
-        // Output lands in: <repo_root>/target/release/  (workspace-level target)
+        // Built by running from repo root:
+        //   cargo build --workspace --release
         //
-        // Plugin sits at:
-        //   TheDomain/Plugins/NexusCore/Source/NexusCore/   (4 levels up = TheDomain/)
-        //   plugins/NexusCore/Source/NexusCore/             (4 levels up = repo root)
-        // Repo root is one more level up from TheDomain/:
+        // Directory layout:
+        //   <repo_root>/
+        //     Cargo.toml                        <- workspace root
+        //     target/release/nexus_ecs.lib      <- Win64 MSVC output
+        //     target/release/libnexus_ecs.a     <- Win64 GNU / Mac / Linux
+        //     engine 5.8/
+        //       Plugins/
+        //         NexusCore/
+        //           Source/
+        //             NexusCore/
+        //               NexusCore.Build.cs      <- THIS FILE (6 levels up = repo root)
+        //
+        // ModuleDirectory = <repo_root>/engine 5.8/Plugins/NexusCore/Source/NexusCore
+        // Walk up 6 levels to reach repo root.
 
-        string PluginDir = Path.GetFullPath(Path.Combine(ModuleDirectory, "..", "..", "..", ".."));
-        // PluginDir is now either TheDomain/ or plugins/ depending on which copy UE loaded.
-        // Repo root is the parent of whichever folder we're in.
-        string RepoRoot  = Path.GetFullPath(Path.Combine(PluginDir, ".."));
+        string RepoRoot = Path.GetFullPath(
+            Path.Combine(ModuleDirectory, "..", "..", "..", "..", "..", ".."));
 
-        // Cargo workspace target — always at repo root, never inside core/
-        string RustTarget = Path.Combine(RepoRoot, "target");
+        string RustRelease = Path.Combine(RepoRoot, "target", "release");
 
-        string LibDir;
-        string LibPrefix;
-        string LibExt;
+        System.Console.WriteLine("[NexusCore] ModuleDirectory : " + ModuleDirectory);
+        System.Console.WriteLine("[NexusCore] Resolved RepoRoot: " + RepoRoot);
+        System.Console.WriteLine("[NexusCore] Rust release dir : " + RustRelease);
 
-        if (Target.Platform == UnrealTargetPlatform.Win64)
-        {
-            // MSVC toolchain: cargo build produces .lib directly in release/
-            LibDir    = Path.Combine(RustTarget, "release");
-            LibPrefix = "";
-            LibExt    = ".lib";
-        }
-        else if (Target.Platform == UnrealTargetPlatform.Mac)
-        {
-            LibDir    = Path.Combine(RustTarget, "release");
-            LibPrefix = "lib";
-            LibExt    = ".a";
-        }
-        else // Linux
-        {
-            LibDir    = Path.Combine(RustTarget, "release");
-            LibPrefix = "lib";
-            LibExt    = ".a";
-        }
-
+        // Try candidate library paths in priority order.
+        // MSVC toolchain produces nexus_ecs.lib
+        // GNU toolchain produces libnexus_ecs.a (also works on Mac/Linux)
         string[] RustCrates = { "nexus_ecs", "nexus_world", "nexus_physics", "nexus_net" };
+
         foreach (string Crate in RustCrates)
         {
-            string LibPath = Path.Combine(LibDir, LibPrefix + Crate + LibExt);
-            if (File.Exists(LibPath))
+            // Candidates in order of preference for each platform
+            string[] Candidates;
+
+            if (Target.Platform == UnrealTargetPlatform.Win64)
             {
-                PublicAdditionalLibraries.Add(LibPath);
-                System.Console.WriteLine("[NexusCore] Linking: " + LibPath);
+                Candidates = new string[]
+                {
+                    Path.Combine(RustRelease, Crate + ".lib"),           // MSVC toolchain
+                    Path.Combine(RustRelease, "lib" + Crate + ".a"),     // GNU toolchain fallback
+                };
             }
             else
             {
-                System.Console.WriteLine(
-                    "[NexusCore] WARNING: Rust lib not found — run `cargo build --workspace --release` from repo root: "
-                    + LibPath);
+                Candidates = new string[]
+                {
+                    Path.Combine(RustRelease, "lib" + Crate + ".a"),
+                };
             }
+
+            bool Found = false;
+            foreach (string Candidate in Candidates)
+            {
+                if (File.Exists(Candidate))
+                {
+                    PublicAdditionalLibraries.Add(Candidate);
+                    System.Console.WriteLine("[NexusCore] Linking " + Crate + ": " + Candidate);
+                    Found = true;
+                    break;
+                }
+            }
+
+            if (!Found)
+            {
+                System.Console.WriteLine(
+                    "[NexusCore] WARNING: Could not find lib for " + Crate +
+                    ". Tried: " + string.Join(", ", Candidates) +
+                    ". Run `cargo build --workspace --release` from: " + RepoRoot);
+            }
+        }
+
+        // On Windows, the MSVC Rust runtime needs these system libs.
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            PublicSystemLibraries.AddRange(new string[]
+            {
+                "Bcrypt.lib",   // Rust crypto primitives
+                "Ntdll.lib",    // Rust std thread/process APIs
+                "Userenv.lib",  // Rust std env APIs
+                "Ws2_32.lib",   // Rust std net APIs
+            });
         }
     }
 }
