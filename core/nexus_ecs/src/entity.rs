@@ -9,7 +9,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 
 /// Packed entity ID: upper 32 bits = generation, lower 32 bits = index.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct EntityId(u64);
+pub struct EntityId(pub(crate) u64);
 
 impl EntityId {
     #[inline]

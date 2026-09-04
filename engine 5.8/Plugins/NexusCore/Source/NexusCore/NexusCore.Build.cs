@@ -24,15 +24,21 @@ public class NexusCore : ModuleRules
         });
 
         // ── Rust FFI static libraries ──────────────────────────────────────
-        // Run `cargo build --workspace --release` from repo root before building.
-        // Plugin opens and generates project files without them (graceful skip).
+        // Built by: cargo build --workspace --release  (run from repo root)
+        // Output lands in: <repo_root>/target/release/  (workspace-level target)
+        //
+        // Plugin sits at:
+        //   TheDomain/Plugins/NexusCore/Source/NexusCore/   (4 levels up = TheDomain/)
+        //   plugins/NexusCore/Source/NexusCore/             (4 levels up = repo root)
+        // Repo root is one more level up from TheDomain/:
 
-        // Repo root is 5 levels up from this file:
-        // TheDomain/Plugins/NexusCore/Source/NexusCore/
-        string RepoRoot = Path.GetFullPath(
-            Path.Combine(ModuleDirectory, "..", "..", "..", "..", ".."));
+        string PluginDir = Path.GetFullPath(Path.Combine(ModuleDirectory, "..", "..", "..", ".."));
+        // PluginDir is now either TheDomain/ or plugins/ depending on which copy UE loaded.
+        // Repo root is the parent of whichever folder we're in.
+        string RepoRoot  = Path.GetFullPath(Path.Combine(PluginDir, ".."));
 
-        string RustTarget = Path.Combine(RepoRoot, "core", "target");
+        // Cargo workspace target — always at repo root, never inside core/
+        string RustTarget = Path.Combine(RepoRoot, "target");
 
         string LibDir;
         string LibPrefix;
@@ -40,7 +46,8 @@ public class NexusCore : ModuleRules
 
         if (Target.Platform == UnrealTargetPlatform.Win64)
         {
-            LibDir    = Path.Combine(RustTarget, "x86_64-pc-windows-msvc", "release");
+            // MSVC toolchain: cargo build produces .lib directly in release/
+            LibDir    = Path.Combine(RustTarget, "release");
             LibPrefix = "";
             LibExt    = ".lib";
         }
@@ -50,7 +57,7 @@ public class NexusCore : ModuleRules
             LibPrefix = "lib";
             LibExt    = ".a";
         }
-        else
+        else // Linux
         {
             LibDir    = Path.Combine(RustTarget, "release");
             LibPrefix = "lib";
@@ -69,7 +76,7 @@ public class NexusCore : ModuleRules
             else
             {
                 System.Console.WriteLine(
-                    "[NexusCore] WARNING: Missing Rust lib (run cargo build --workspace --release): "
+                    "[NexusCore] WARNING: Rust lib not found — run `cargo build --workspace --release` from repo root: "
                     + LibPath);
             }
         }
