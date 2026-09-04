@@ -16,7 +16,6 @@ pub mod scheduler;
 pub mod world;
 
 pub use entity::{Entity, EntityId};
+pub use query::Component;
 pub use world::World;
-
-/// Re-export the query derive macro (implementation pending Phase 1 Step 1 prompt).
-pub use query::Query;
+pub use scheduler::Scheduler;
