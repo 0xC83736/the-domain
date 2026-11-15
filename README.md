@@ -64,7 +64,15 @@ python tools/asset_validation/validate.py \
 
 # 5. Open UE5 project (requires UE5 5.8 installed)
 # engine/TheDomain.uproject → right-click → Generate project files → open .sln
+
+# ...or build the Rust FFI crates + the TheDomainEditor target in one step:
+build.bat
 ```
+
+`build.bat` auto-detects the Unreal Engine 5.8 install from the registry; if
+that fails, set `UE_ROOT` first (e.g. `set UE_ROOT=C:\Program Files\Epic
+Games\UE_5.8`). Pass a configuration name to build something other than
+Development, e.g. `build.bat Shipping`.
 
 ## Architecture decisions
 

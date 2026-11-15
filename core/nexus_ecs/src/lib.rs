@@ -10,6 +10,7 @@
 
 pub mod archetype;
 pub mod entity;
+pub mod ffi;
 pub mod query;
 pub mod scheduler;
 pub mod world;
