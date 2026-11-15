@@ -46,6 +46,11 @@ if not defined UE_ROOT (
     echo   set UE_ROOT=C:\Program Files\Epic Games\UE_5.8
     exit /b 1
 )
+
+:: Strip any quotes the user (or registry value) may have included, and a
+:: trailing backslash, so the quoting added below doesn't get doubled up.
+set "UE_ROOT=%UE_ROOT:"=%"
+if "%UE_ROOT:~-1%"=="\" set "UE_ROOT=%UE_ROOT:~0,-1%"
 echo Found engine at: %UE_ROOT%
 
 set "UPROJECT=%REPO_ROOT%engine\TheDomain.uproject"
