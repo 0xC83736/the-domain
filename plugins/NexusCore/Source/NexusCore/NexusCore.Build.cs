@@ -26,9 +26,13 @@ public class NexusCore : ModuleRules
         });
 
         // Rust FFI library path — built via cargo before UE compilation (see
-        // tools/build.bat). rustc's MSVC target emits "<name>.lib" with no
-        // "lib" prefix; its GNU/Unix targets emit "lib<name>.a".
-        string RustLibPath = Path.Combine(ModuleDirectory, "../../../../core/target/release");
+        // build.bat). rustc's MSVC target emits "<name>.lib" with no "lib"
+        // prefix; its GNU/Unix targets emit "lib<name>.a". UBT only resolves
+        // PublicAdditionalLibraries entries as actual files when they're
+        // fully qualified (no ".." segments) — GetFullPath collapses the
+        // relative traversal so it doesn't fall back to a slow library-path
+        // search.
+        string RustLibPath = Path.GetFullPath(Path.Combine(ModuleDirectory, "../../../../core/target/release"));
         string[] RustCrates = { "nexus_ecs", "nexus_world", "nexus_physics", "nexus_net" };
         foreach (string Crate in RustCrates)
         {

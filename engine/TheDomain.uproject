@@ -16,8 +16,8 @@
     ],
     "Plugins": [
         { "Name": "NexusCore",     "Enabled": true },
-        { "Name": "DLSS",          "Enabled": true },
-        { "Name": "FSR3",          "Enabled": true }
+        { "Name": "DLSS",          "Enabled": true, "Optional": true },
+        { "Name": "FSR3",          "Enabled": true, "Optional": true }
     ],
     "AdditionalPluginDirectories": [
         "../plugins"
