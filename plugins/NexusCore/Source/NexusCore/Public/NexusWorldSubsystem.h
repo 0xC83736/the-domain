@@ -15,7 +15,7 @@
  * Writes (spawn/despawn/component mutation) are queued and applied
  * at the start of the next Rust tick.
  */
-UCLASS()
+UCLASS(BlueprintType)
 class NEXUSCORE_API UNexusWorldSubsystem : public UGameInstanceSubsystem
 {
     GENERATED_BODY()
