@@ -44,5 +44,23 @@ public class NexusCore : ModuleRules
                 : "lib" + Crate + ".a";
             PublicAdditionalLibraries.Add(Path.Combine(RustLibPath, FileName));
         }
+
+        // rustc's std, on the x86_64-pc-windows-msvc target, calls straight
+        // into a handful of Windows APIs that aren't pulled in by default
+        // when a .lib built by cargo is consumed directly by link.exe rather
+        // than by rustc itself (which passes these automatically). Confirmed
+        // via `cargo rustc --release -- --print=native-static-libs` against
+        // this toolchain: kernel32.lib (already linked by default) plus the
+        // four below.
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            PublicSystemLibraries.AddRange(new string[]
+            {
+                "ntdll.lib",
+                "userenv.lib",
+                "ws2_32.lib",
+                "dbghelp.lib",
+            });
+        }
     }
 }
