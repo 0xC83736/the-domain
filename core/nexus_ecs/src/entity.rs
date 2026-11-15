@@ -24,6 +24,18 @@ impl EntityId {
     pub(crate) fn new(index: u32, generation: u32) -> Self {
         Self(((generation as u64) << 32) | index as u64)
     }
+
+    /// Pack into the 64-bit wire representation used across the FFI boundary.
+    #[inline]
+    pub fn to_bits(self) -> u64 {
+        self.0
+    }
+
+    /// Unpack from the 64-bit wire representation used across the FFI boundary.
+    #[inline]
+    pub fn from_bits(bits: u64) -> Self {
+        Self(bits)
+    }
 }
 
 /// A live entity handle.  Cheaply copyable; validity checked against the

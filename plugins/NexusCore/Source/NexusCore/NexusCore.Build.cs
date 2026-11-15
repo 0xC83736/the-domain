@@ -25,11 +25,17 @@ public class NexusCore : ModuleRules
             "SlateCore",
         });
 
-        // Rust FFI library path — built via cargo in CI before UE compilation
+        // Rust FFI library path — built via cargo before UE compilation (see
+        // tools/build.bat). rustc's MSVC target emits "<name>.lib" with no
+        // "lib" prefix; its GNU/Unix targets emit "lib<name>.a".
         string RustLibPath = Path.Combine(ModuleDirectory, "../../../../core/target/release");
-        PublicAdditionalLibraries.Add(Path.Combine(RustLibPath, "libnexus_ecs.a"));
-        PublicAdditionalLibraries.Add(Path.Combine(RustLibPath, "libnexus_world.a"));
-        PublicAdditionalLibraries.Add(Path.Combine(RustLibPath, "libnexus_physics.a"));
-        PublicAdditionalLibraries.Add(Path.Combine(RustLibPath, "libnexus_net.a"));
+        string[] RustCrates = { "nexus_ecs", "nexus_world", "nexus_physics", "nexus_net" };
+        foreach (string Crate in RustCrates)
+        {
+            string FileName = Target.Platform == UnrealTargetPlatform.Win64
+                ? Crate + ".lib"
+                : "lib" + Crate + ".a";
+            PublicAdditionalLibraries.Add(Path.Combine(RustLibPath, FileName));
+        }
     }
 }
