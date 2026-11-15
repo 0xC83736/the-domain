@@ -17,7 +17,11 @@ pub struct Scheduler {
 }
 
 impl Scheduler {
-    pub fn new() -> Self { Self { systems: Vec::new() } }
+    pub fn new() -> Self {
+        Self {
+            systems: Vec::new(),
+        }
+    }
 
     pub fn add_system(&mut self, desc: SystemDescriptor) {
         self.systems.push(desc);
@@ -31,5 +35,11 @@ impl Scheduler {
         for system in &self.systems {
             (system.run)();
         }
+    }
+}
+
+impl Default for Scheduler {
+    fn default() -> Self {
+        Self::new()
     }
 }

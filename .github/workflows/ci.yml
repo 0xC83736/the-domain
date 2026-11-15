@@ -48,12 +48,12 @@ jobs:
       - name: Bench baseline (target branch)
         run: |
           git checkout ${{ github.base_ref }}
-          cargo bench --workspace -- --save-baseline base
+          cargo bench --workspace --benches -- --save-baseline base
 
       - name: Bench PR
         run: |
           git checkout ${{ github.head_ref }}
-          cargo bench --workspace -- --save-baseline pr
+          cargo bench --workspace --benches -- --save-baseline pr
 
       - name: Compare — fail if >10% regression
         run: critcmp base pr --threshold 10

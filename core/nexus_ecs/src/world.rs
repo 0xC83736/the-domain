@@ -4,15 +4,19 @@
 //! system scheduler.  External code interacts with it exclusively through
 //! the typed API; raw pointer access is confined to the archetype layer.
 
-use std::any::TypeId;
-use std::collections::HashMap;
 use parking_lot::RwLock;
+use std::collections::HashMap;
 
 use crate::archetype::Archetype;
 use crate::entity::{Entity, EntityAllocator, EntityId};
 
 /// Location of an entity within an archetype table.
+///
+/// Not yet read — Phase 1 Step 1 prompt wires archetype storage into
+/// `World::spawn`/`despawn`, at which point `entity_map` starts populating
+/// this with real locations instead of leaving it as a placeholder.
 #[derive(Clone, Copy)]
+#[allow(dead_code)]
 struct EntityLocation {
     archetype_index: usize,
     row: usize,
@@ -21,6 +25,7 @@ struct EntityLocation {
 /// The central ECS world.  Cheap to clone as an `Arc<World>`.
 pub struct World {
     allocator: EntityAllocator,
+    #[allow(dead_code)]
     archetypes: RwLock<Vec<Archetype>>,
     entity_map: RwLock<HashMap<EntityId, EntityLocation>>,
 }
@@ -65,5 +70,7 @@ impl World {
 }
 
 impl Default for World {
-    fn default() -> Self { Self::new() }
+    fn default() -> Self {
+        Self::new()
+    }
 }

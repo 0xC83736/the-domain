@@ -9,14 +9,22 @@ use std::any::TypeId;
 use std::collections::HashMap;
 
 /// Opaque per-column byte storage.
+///
+/// Not yet wired into [`crate::world::World`] — Phase 1 Step 1 prompt
+/// connects archetype storage to `World::spawn`/`despawn`.
+#[allow(dead_code)]
 pub(crate) struct Column {
     pub item_size: usize,
     pub data: Vec<u8>,
 }
 
+#[allow(dead_code)]
 impl Column {
     pub fn new(item_size: usize) -> Self {
-        Self { item_size, data: Vec::new() }
+        Self {
+            item_size,
+            data: Vec::new(),
+        }
     }
 
     pub fn push_raw(&mut self, bytes: &[u8]) {
@@ -25,7 +33,7 @@ impl Column {
     }
 
     pub fn len(&self) -> usize {
-        if self.item_size == 0 { 0 } else { self.data.len() / self.item_size }
+        self.data.len().checked_div(self.item_size).unwrap_or(0)
     }
 
     /// # Safety
@@ -44,6 +52,9 @@ impl Column {
 }
 
 /// One archetype: a table where each row is an entity and each column is a component.
+///
+/// Not yet wired into [`crate::world::World`] — see [`Column`].
+#[allow(dead_code)]
 pub(crate) struct Archetype {
     pub type_ids: Vec<TypeId>,
     pub columns: HashMap<TypeId, Column>,
@@ -51,13 +62,18 @@ pub(crate) struct Archetype {
     pub entities: Vec<crate::EntityId>,
 }
 
+#[allow(dead_code)]
 impl Archetype {
     pub fn new(type_ids: Vec<TypeId>, item_sizes: &[(TypeId, usize)]) -> Self {
         let mut columns = HashMap::new();
         for &(tid, size) in item_sizes {
             columns.insert(tid, Column::new(size));
         }
-        Self { type_ids, columns, entities: Vec::new() }
+        Self {
+            type_ids,
+            columns,
+            entities: Vec::new(),
+        }
     }
 
     pub fn row_count(&self) -> usize {

@@ -9,9 +9,7 @@ fn bench_spawn_despawn(c: &mut Criterion) {
     c.bench_function("spawn_despawn_1m", |b| {
         b.iter(|| {
             let world = World::new();
-            let entities: Vec<_> = (0..1_000_000)
-                .map(|_| world.spawn())
-                .collect();
+            let entities: Vec<_> = (0..1_000_000).map(|_| world.spawn()).collect();
             for e in entities {
                 world.despawn(black_box(e));
             }
