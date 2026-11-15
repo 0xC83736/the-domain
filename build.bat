@@ -18,9 +18,12 @@ echo === The Domain build ===
 echo Configuration: %CONFIG%
 
 :: --- 1. Build the Rust FFI workspace -------------------------------------
+:: The Cargo workspace root is the repo root itself (see Cargo.toml), not
+:: core/ — cargo build output lands in <repo-root>/target/release, which is
+:: what NexusCore.Build.cs links against.
 echo.
 echo [1/3] Building Rust workspace (release)...
-pushd "%REPO_ROOT%core"
+pushd "%REPO_ROOT%"
 cargo build --release --workspace
 if errorlevel 1 (
     echo.
