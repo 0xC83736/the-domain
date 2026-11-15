@@ -63,14 +63,23 @@ if not exist "%BUILD_BAT%" (
     exit /b 1
 )
 
-:: --- 3. Generate project files and build ---------------------------------
+:: --- 3. Generate project files (optional) and build ----------------------
+:: GenerateProjectFiles.bat only produces the .sln/.vcxproj for opening the
+:: project in Visual Studio — Build.bat/UBT compiles straight from
+:: Target.cs/Build.cs and doesn't need it. Some engine installs don't ship
+:: it at this path, so skip it rather than failing the whole build.
 echo.
 echo [3/3] Generating project files and building TheDomainEditor (%CONFIG%)...
-call "%GEN_BAT%" -project="%UPROJECT%" -game
-if errorlevel 1 (
-    echo.
-    echo Generate project files failed.
-    exit /b 1
+if exist "%GEN_BAT%" (
+    call "%GEN_BAT%" -project="%UPROJECT%" -game
+    if errorlevel 1 (
+        echo.
+        echo Generate project files failed ^(continuing — not required to build^).
+    )
+) else (
+    echo GenerateProjectFiles.bat not found at "%GEN_BAT%" — skipping ^(not required to build^).
+    echo To open the project in Visual Studio, right-click TheDomain.uproject and
+    echo choose "Generate Visual Studio project files" instead.
 )
 
 call "%BUILD_BAT%" TheDomainEditor Win64 %CONFIG% -Project="%UPROJECT%" -WaitMutex
