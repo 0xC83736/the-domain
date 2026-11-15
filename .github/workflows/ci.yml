@@ -45,15 +45,21 @@ jobs:
       - name: Install critcmp
         run: cargo install critcmp --locked
 
+      # Only nexus_ecs has real benchmarks today; the other Phase 1 stub
+      # crates carry a criterion dev-dependency but no [[bench]] target, so
+      # `--workspace` would try (and fail) to bench their plain lib via the
+      # default libtest harness. Target the known bench explicitly instead —
+      # this also keeps the baseline step working against the base branch's
+      # Cargo.toml, whatever state it's in.
       - name: Bench baseline (target branch)
         run: |
           git checkout ${{ github.base_ref }}
-          cargo bench --workspace --benches -- --save-baseline base
+          cargo bench -p nexus_ecs --bench ecs_bench -- --save-baseline base
 
       - name: Bench PR
         run: |
           git checkout ${{ github.head_ref }}
-          cargo bench --workspace --benches -- --save-baseline pr
+          cargo bench -p nexus_ecs --bench ecs_bench -- --save-baseline pr
 
       - name: Compare — fail if >10% regression
         run: critcmp base pr --threshold 10
