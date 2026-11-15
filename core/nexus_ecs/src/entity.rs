@@ -13,9 +13,13 @@ pub struct EntityId(u64);
 
 impl EntityId {
     #[inline]
-    pub fn index(self) -> u32 { self.0 as u32 }
+    pub fn index(self) -> u32 {
+        self.0 as u32
+    }
     #[inline]
-    pub fn generation(self) -> u32 { (self.0 >> 32) as u32 }
+    pub fn generation(self) -> u32 {
+        (self.0 >> 32) as u32
+    }
     #[inline]
     pub(crate) fn new(index: u32, generation: u32) -> Self {
         Self(((generation as u64) << 32) | index as u64)

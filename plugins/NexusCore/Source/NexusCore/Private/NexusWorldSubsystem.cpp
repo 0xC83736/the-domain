@@ -1,4 +1,5 @@
 #include "NexusWorldSubsystem.h"
+#include <cstdint>
 
 // Forward declarations of Rust FFI functions.
 // Implementations live in nexus_ecs (compiled to static lib by cargo).

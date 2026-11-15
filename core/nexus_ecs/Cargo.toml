@@ -7,6 +7,9 @@ authors.workspace    = true
 license.workspace    = true
 repository.workspace = true
 
+[lib]
+bench = false
+
 [dependencies]
 glam.workspace      = true
 parking_lot.workspace = true
