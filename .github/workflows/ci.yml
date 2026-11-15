@@ -41,6 +41,8 @@ jobs:
         with: { fetch-depth: 0 }
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
 
       - name: Install critcmp
         run: cargo install critcmp --locked
@@ -61,8 +63,15 @@ jobs:
           git checkout ${{ github.head_ref }}
           cargo bench -p nexus_ecs --bench ecs_bench -- --save-baseline pr
 
+      # critcmp's own `--threshold` flag only hides small diffs from its
+      # printed table — it is not a pass/fail gate, and critcmp exits
+      # non-zero whenever nothing is left to show after filtering, i.e.
+      # exactly when there is *no* regression. Do the actual check in
+      # tools/ci/bench_regression_gate.py instead.
       - name: Compare — fail if >10% regression
-        run: critcmp base pr --threshold 10
+        run: |
+          critcmp base pr
+          python3 tools/ci/bench_regression_gate.py base pr --threshold 10
 
   # ─── Asset validation ──────────────────────────────────────────────────────
   asset-validation:
