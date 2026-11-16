@@ -1,6 +1,7 @@
 #include "DomainCharacter.h"
 
 #include "Camera/CameraComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -30,6 +31,14 @@ ADomainCharacter::ADomainCharacter()
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
     FollowCamera->bUsePawnControlRotation = false;
+
+    // No spring arm: attached straight to the capsule at eye height, so it
+    // can't clip through geometry the way a third-person boom can.
+    FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+    FirstPersonCamera->SetupAttachment(GetCapsuleComponent());
+    FirstPersonCamera->SetRelativeLocation(FVector(0.0f, 0.0f, BaseEyeHeight));
+    FirstPersonCamera->bUsePawnControlRotation = true;
+    FirstPersonCamera->SetActive(false);
 }
 
 void ADomainCharacter::BeginPlay()
@@ -68,6 +77,11 @@ void ADomainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
             EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
             EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
         }
+        if (ToggleCameraAction)
+        {
+            EnhancedInputComponent->BindAction(ToggleCameraAction, ETriggerEvent::Started, this,
+                                                &ADomainCharacter::ToggleCameraView);
+        }
     }
 }
 
@@ -96,4 +110,16 @@ void ADomainCharacter::Look(const FInputActionValue& Value)
         AddControllerYawInput(LookAxisVector.X);
         AddControllerPitchInput(LookAxisVector.Y);
     }
+}
+
+void ADomainCharacter::ToggleCameraView()
+{
+    bIsFirstPerson = !bIsFirstPerson;
+
+    FollowCamera->SetActive(!bIsFirstPerson);
+    FirstPersonCamera->SetActive(bIsFirstPerson);
+
+    // Hide the body from the owning client's own camera in first person so
+    // it doesn't clip into view; other clients (in multiplayer) still see it.
+    GetMesh()->SetOwnerNoSee(bIsFirstPerson);
 }
