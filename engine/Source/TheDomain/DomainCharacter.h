@@ -6,6 +6,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class USkeletalMeshComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
@@ -28,6 +29,20 @@ struct FInputActionValue;
  *   3. Make a Blueprint child of this class (or edit Class Defaults
  *      directly) and assign DefaultMappingContext/MoveAction/LookAction/
  *      JumpAction/ToggleCameraAction to the assets created above.
+ *
+ * Body/arms setup (skeletal mesh assets, also can't be authored from
+ * source):
+ *   1. Content Browser -> Add -> Add Feature or Content Pack -> "Third
+ *      Person" gives a full-body mannequin mesh + animation blueprint;
+ *      "First Person" gives a dedicated arms-only mesh + animation
+ *      blueprint sized for a camera-attached view.
+ *   2. On the Character Blueprint: set the inherited Mesh component
+ *      (the body, already hidden from the owner's own camera in first
+ *      person via SetOwnerNoSee) to the Third Person mesh + anim
+ *      blueprint.
+ *   3. Set the FirstPersonMesh component to the First Person arms mesh +
+ *      its anim blueprint, then adjust its relative transform in the
+ *      viewport until the hands line up with FirstPersonCamera.
  */
 UCLASS(Blueprintable)
 class THEDOMAIN_API ADomainCharacter : public ACharacter
@@ -57,6 +72,15 @@ protected:
     /** Attached directly to the capsule at eye height — no spring arm, so it can't clip through walls. */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
     TObjectPtr<UCameraComponent> FirstPersonCamera;
+
+    /**
+     * Arms-only mesh attached to FirstPersonCamera, visible only to the
+     * owning client (SetOnlyOwnerSee) so other players never see it
+     * floating in front of the camera. Assign a dedicated first-person
+     * arms mesh/anim blueprint in the editor — see class comment.
+     */
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+    TObjectPtr<USkeletalMeshComponent> FirstPersonMesh;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
     bool bIsFirstPerson = false;

@@ -40,6 +40,15 @@ ADomainCharacter::ADomainCharacter()
     FirstPersonCamera->SetRelativeLocation(FVector(0.0f, 0.0f, BaseEyeHeight));
     FirstPersonCamera->bUsePawnControlRotation = true;
     FirstPersonCamera->SetActive(false);
+
+    // Owner-only arms mesh: other clients never see it (SetOnlyOwnerSee),
+    // and it has no bearing on the owner's own body mesh visibility, which
+    // is handled separately by GetMesh()->SetOwnerNoSee in ToggleCameraView.
+    FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+    FirstPersonMesh->SetupAttachment(FirstPersonCamera);
+    FirstPersonMesh->SetOnlyOwnerSee(true);
+    FirstPersonMesh->SetCastShadow(false);
+    FirstPersonMesh->SetVisibility(false);
 }
 
 void ADomainCharacter::BeginPlay()
@@ -119,6 +128,7 @@ void ADomainCharacter::ToggleCameraView()
 
     FollowCamera->SetActive(!bIsFirstPerson);
     FirstPersonCamera->SetActive(bIsFirstPerson);
+    FirstPersonMesh->SetVisibility(bIsFirstPerson, true);
 
     // Hide the body from the owning client's own camera in first person so
     // it doesn't clip into view; other clients (in multiplayer) still see it.
